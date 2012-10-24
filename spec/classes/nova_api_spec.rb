@@ -44,23 +44,23 @@ describe 'nova::api' do
     end
     describe 'with defaults' do
       it 'should use default params for api-paste.init' do
-        should contain_nova_paste_api_ini(
-         'filter:authtoken/auth_host').with_value('127.0.0.1')
-        should contain_nova_paste_api_ini(
-          'filter:authtoken/auth_port').with_value('35357')
-        should contain_nova_paste_api_ini(
-          'filter:authtoken/auth_protocol').with_value('http')
-        should contain_nova_paste_api_ini(
-          'filter:authtoken/admin_tenant_name').with_value('services')
-        should contain_nova_paste_api_ini(
-          'filter:authtoken/admin_user').with_value('nova')
-        should contain_nova_paste_api_ini(
-          'filter:authtoken/admin_password').with_value('passw0rd')
+        should contain_nova_config(
+          'keystone_authtoken/auth_host').with_value('127.0.0.1')
+        should contain_nova_config(
+          'keystone_authtoken/auth_port').with_value('35357')
+        should contain_nova_config(
+          'keystone_authtoken/auth_protocol').with_value('http')
+        should contain_nova_config(
+          'keystone_authtoken/admin_tenant_name').with_value('services')
+        should contain_nova_config(
+          'keystone_authtoken/admin_user').with_value('nova')
+        should contain_nova_config(
+          'keystone_authtoken/admin_password').with_value('passw0rd')
       end
-      it { should contain_nova_config('ec2_listen').with('value' => '0.0.0.0') }
-      it { should contain_nova_config('osapi_compute_listen').with('value' => '0.0.0.0') }
-      it { should contain_nova_config('metadata_listen').with('value' => '0.0.0.0') }
-      it { should contain_nova_config('osapi_volume_listen').with('value' => '0.0.0.0') }
+      it { should contain_nova_config('DEFAULT/ec2_listen').with('value' => '0.0.0.0') }
+      it { should contain_nova_config('DEFAULT/osapi_compute_listen').with('value' => '0.0.0.0') }
+      it { should contain_nova_config('DEFAULT/metadata_listen').with('value' => '0.0.0.0') }
+      it { should contain_nova_config('DEFAULT/osapi_volume_listen').with('value' => '0.0.0.0') }
     end
     describe 'with params' do
       let :params do
@@ -77,23 +77,23 @@ describe 'nova::api' do
         }
       end
       it 'should use default params for api-paste.init' do
-        should contain_nova_paste_api_ini(
-         'filter:authtoken/auth_host').with_value('10.0.0.1')
-        should contain_nova_paste_api_ini(
-          'filter:authtoken/auth_port').with_value('1234')
-        should contain_nova_paste_api_ini(
-          'filter:authtoken/auth_protocol').with_value('https')
-        should contain_nova_paste_api_ini(
-          'filter:authtoken/admin_tenant_name').with_value('service2')
-        should contain_nova_paste_api_ini(
-          'filter:authtoken/admin_user').with_value('nova2')
-        should contain_nova_paste_api_ini(
-          'filter:authtoken/admin_password').with_value('passw0rd2')
+        should contain_nova_config(
+          'keystone_authtoken/auth_host').with_value('10.0.0.1')
+        should contain_nova_config(
+          'keystone_authtoken/auth_port').with_value('1234')
+        should contain_nova_config(
+          'keystone_authtoken/auth_protocol').with_value('https')
+        should contain_nova_config(
+          'keystone_authtoken/admin_tenant_name').with_value('service2')
+        should contain_nova_config(
+          'keystone_authtoken/admin_user').with_value('nova2')
+        should contain_nova_config(
+          'keystone_authtoken/admin_password').with_value('passw0rd2')
       end
-      it { should contain_nova_config('ec2_listen').with('value' => '192.168.56.210') }
-      it { should contain_nova_config('osapi_compute_listen').with('value' => '192.168.56.210') }
-      it { should contain_nova_config('metadata_listen').with('value' => '192.168.56.210') }
-      it { should contain_nova_config('osapi_volume_listen').with('value' => '192.168.56.210') }
+      it { should contain_nova_config('DEFAULT/ec2_listen').with('value' => '192.168.56.210') }
+      it { should contain_nova_config('DEFAULT/osapi_compute_listen').with('value' => '192.168.56.210') }
+      it { should contain_nova_config('DEFAULT/metadata_listen').with('value' => '192.168.56.210') }
+      it { should contain_nova_config('DEFAULT/osapi_volume_listen').with('value' => '192.168.56.210') }
     end
   end
   describe 'on rhel' do

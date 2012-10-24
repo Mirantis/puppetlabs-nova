@@ -61,12 +61,12 @@ node /controller/ {
   $nova_db = "mysql://nova:${nova_db_password}@${controller_host}/nova"
 
   # export all of the things that will be needed by the clients
-  @@nova_config { 'rabbit_host': value => $controller_host }
-  Nova_config <| title == 'rabbit_host' |>
-  @@nova_config { 'sql_connection': value => $nova_db }
-  Nova_config <| title == 'sql_connection' |>
-  @@nova_config { 'glance_api_servers': value => $glance_api_servers }
-  Nova_config <| title == 'glance_api_servers' |>
+  @@nova_config { 'DEFAULT/rabbit_host': value => $controller_host }
+  Nova_config <| title == 'DEFAULT/rabbit_host' |>
+  @@nova_config { 'DEFAULT/sql_connection': value => $nova_db }
+  Nova_config <| title == 'DEFAULT/sql_connection' |>
+  @@nova_config { 'DEFAULT/glance_api_servers': value => $glance_api_servers }
+  Nova_config <| title == 'DEFAULT/glance_api_servers' |>
 
   # set up mysql server
   class { 'mysql::server':

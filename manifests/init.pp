@@ -10,7 +10,8 @@
 #   Defaults to 'nova.image.local.LocalImageService'
 # [glance_api_servers] List of addresses for api servers. Optional.
 #   Defaults to localhost:9292.
-# [rabbit_host] Location of rabbitmq installation. Optional. Defaults to localhost.
+# [rabbit_host] RabbitMQ host, or false if there are multiple (then use nova::rabbitmq_ha).
+#   Optional. Defaults to localhost.
 # [rabbit_password] Password used to connect to rabbitmq. Optional. Defaults to guest.
 # [rabbit_port] Port for rabbitmq instance. Optional. Defaults to 5672.
 # [rabbit_userid] User used to connect to rabbitmq. Optional. Defaults to guest.
@@ -63,12 +64,6 @@ class nova(
   Package['nova-common'] -> Nova_config<| |> -> File['/etc/nova/nova.conf']
   Nova_config<| |> ~> Exec['post-nova_config']
 
-  File {
-    require => Package['nova-common'],
-    owner   => 'nova',
-    group   => 'nova',
-  }
-
   # TODO - see if these packages can be removed
   # they should be handled as package deps by the OS
   package { 'python':
@@ -111,9 +106,15 @@ class nova(
   file { $logdir:
     ensure  => directory,
     mode    => '0751',
+    require => Package['nova-common'],
+    owner   => 'nova',
+    group   => 'nova',
   }
   file { '/etc/nova/nova.conf':
     mode  => '0640',
+    require => Package['nova-common'],
+    owner   => 'nova',
+    group   => 'nova',
   }
 
   # used by debian/ubuntu in nova::network_bridge to refresh
@@ -142,7 +143,7 @@ class nova(
   }
 
   nova_config { 'image_service': value => $image_service }
-
+ 
   if $image_service == 'nova.image.glance.GlanceImageService' {
     if $glance_api_servers {
       nova_config { 'glance_api_servers': value => $glance_api_servers }
@@ -165,6 +166,7 @@ class nova(
     'rabbit_port':         value => $rabbit_port;
     'rabbit_userid':       value => $rabbit_userid;
     'rabbit_virtual_host': value => $rabbit_virtual_host;
+    'rpc_backend': value => 'nova.rpc.impl_kombu';
   }
 
   nova_config {

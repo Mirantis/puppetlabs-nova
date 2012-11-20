@@ -7,6 +7,9 @@ $rabbit_user     = 'nova'
 $rabbit_password = 'nova'
 $rabbit_vhost    = '/'
 $rabbit_host     = 'rabbitmq'
+$rabbit_hosts    = false
+# Alternatively:
+# $rabbit_hosts    = ['rabbit-01','rabbit-02']
 $rabbit_port     = '5672'
 
 $glance_api_servers = 'glance:9292'
@@ -77,6 +80,9 @@ node controller {
 
     libvirt_type => 'qemu',
   }
+  class { 'nova::rabbitmq_ha':
+    rabbit_hosts => $rabbit_hosts
+  }
 }
 
 node compute {
@@ -102,6 +108,9 @@ node compute {
     rabbit_userid       => $rabbit_user,
     rabbit_password     => $rabbit_password,
     rabbit_virtual_host => $rabbit_virtual_host,
+  }
+  class { 'nova::rabbitmq_ha':
+    rabbit_hosts => $rabbit_hosts
   }
 }
 
